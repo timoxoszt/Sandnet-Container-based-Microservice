@@ -13,6 +13,10 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip
 
+# Install npm
+RUN curl -sL https://raw.githubusercontent.com/nodesource/distributions/master/deb/setup_current.x | bash  
+RUN apt-get install -y nodejs
+
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
