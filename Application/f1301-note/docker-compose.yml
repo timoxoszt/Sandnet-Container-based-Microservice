@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: app
+    container_name: note-app
     restart: unless-stopped
     tty: true
     environment:
@@ -22,7 +22,7 @@ services:
   #Nginx Service
   webserver:
     image: nginx:alpine
-    container_name: webserver
+    container_name: note-webserver
     restart: unless-stopped
     tty: true
     ports:
@@ -37,7 +37,7 @@ services:
   #MySQL Service
   db:
     image: mysql
-    container_name: db
+    container_name: note-db
     restart: unless-stopped
     tty: true
     ports:
