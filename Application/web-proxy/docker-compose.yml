@@ -1,0 +1,21 @@
+version: '3'
+services:
+  #Nginx Service for Web Proxy
+  webserver:
+    image: nginx:alpine
+    container_name: note-webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8081:80"
+      - "8443:443"
+    volumes:
+      - ./nginx/sites-available/:/etc/nginx/sites-available/
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - note-network
+
+# Docker Networks
+networks:
+  file-network:
+    driver: bridge
