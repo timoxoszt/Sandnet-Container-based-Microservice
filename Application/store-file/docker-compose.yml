@@ -1,7 +1,7 @@
 version: '3'
 services:
   
-  #PHP Service
+  # PHP Service
   api:
     build:
       context: .
@@ -17,33 +17,24 @@ services:
       - ./:/var/www
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
-      - app-network
-    ports:
-      - "8001:9000"
+      - file-network
 
-  #MySQL Service (FOR DEV)
-  file_db:
-    image: mysql
-    container_name: file-db
+  # Nginx Service for Store file
+  webserver:
+    image: nginx:alpine
+    container_name: file-webserver
     restart: unless-stopped
     tty: true
     ports:
-      - "13307:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: q9KYHfBKBBEJjrCcUG
-      MYSQL_DATABASE: f1301_file
-      MYSQL_USER: s13uc4pvjppr0__us3r
-      MYSQL_PASSWORD: q9KYHfBKBBEJjrCcUG
+      - "8082:80"
+      - "8444:443"
     volumes:
-      - ./db_data:/var/lib/mysql     
+      - ./:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
     networks:
-      - app-network
+      - file-network
 
-#Docker Networks
+# Docker Networks
 networks:
-  app-network:
+  file-network:
     driver: bridge
-#Volumes
-volumes:
-  dbdata:
-    driver: local
