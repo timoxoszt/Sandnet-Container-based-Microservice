@@ -1,7 +1,7 @@
 version: '3'
 services:
   
-  #PHP Service
+  # PHP Service
   app:
     build:
       context: .
@@ -17,46 +17,24 @@ services:
       - ./:/var/www
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
-      - app-network
+      - note-network
 
-  #Nginx Service
+  # Nginx Service for F1301 Note
   webserver:
     image: nginx:alpine
     container_name: note-webserver
     restart: unless-stopped
     tty: true
     ports:
-      - "8080:80"
+      - "8081:80"
       - "8443:443"
     volumes:
       - ./:/var/www
       - ./nginx/conf.d/:/etc/nginx/conf.d/
     networks:
-      - app-network
+      - note-network
 
-  #MySQL Service
-  db:
-    image: mysql
-    container_name: note-db
-    restart: unless-stopped
-    tty: true
-    ports:
-      - "13306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: q9KYHfBKBBEJjrCcUG
-      MYSQL_DATABASE: f1301_note
-      MYSQL_USER: s13uc4pvjppr0__us3r
-      MYSQL_PASSWORD: q9KYHfBKBBEJjrCcUG
-    volumes:
-      - ./db_data:/var/lib/mysql     
-    networks:
-      - app-network
-
-#Docker Networks
+# Docker Networks
 networks:
-  app-network:
+  note-network:
     driver: bridge
-#Volumes
-volumes:
-  dbdata:
-    driver: local
