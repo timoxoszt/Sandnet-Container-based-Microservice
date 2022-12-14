@@ -7,5 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Note extends Model
 {
-    protected $fillable = ['title', 'body'];
+    protected $fillable = [
+        'title', 
+        'body'
+    ];
 }
