@@ -404,6 +404,10 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="mb-3">
+                                            <label for="formFile" class="form-label">Upload file</label>
+                                            <input class="form-control" type="file" id="formFile">
+                                        </div>
                                     </form>
                                 </div>
                             </div>
