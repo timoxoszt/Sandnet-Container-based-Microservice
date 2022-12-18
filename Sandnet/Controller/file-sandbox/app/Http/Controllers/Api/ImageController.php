@@ -14,14 +14,29 @@ class ImageController extends Controller
         $this->validate($request, [
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
-        $image_path = $request->file('image')->store('public');
-        $image_path = ltrim($image_path, 'public/');
-        $storage_path = "storage/" . $image_path;  
 
-        $data = Image::create([
-            'image' => $storage_path,
-        ]);
+        try{
+            $apiKey = '30557d15b2e2f8cf46a81751b287b28c9e0570dc89edc6a061df09ef14ed92ad';
 
-        return response($data, Response::HTTP_CREATED);
+            // Scan file
+            $fileScanner = new \Monaz\VirusTotal\File($apiKey);
+            $resp = $fileScanner->scan($request->file('image'));
+            $result = $fileScanner->getReport($resp['hash']);
+    
+            if($result['attributes']['last_analysis_stats']['malicious'] == 0){
+                $image_path = $request->file('image')->store('public');
+                $image_path = ltrim($image_path, 'public/');
+                $storage_path = "storage/" . $image_path;  
+    
+                $data = Image::create([
+                    'image' => $storage_path,
+                ]);
+                return response($data, Response::HTTP_CREATED);  
+            }else{
+                return "{'title':'Warning', 'body':'File is unsafe'}";
+            }
+        }catch(\Exception $e){
+            return "Something wrong !!!";
+        }
     }
 }
