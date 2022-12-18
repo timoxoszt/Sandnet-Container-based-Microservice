@@ -1,0 +1,40 @@
+version: '3'
+services:
+  
+  # PHP Service
+  text:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: text-sandbox
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: text
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - text-network
+
+  # Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: textsandbox-webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8093:80"
+      - "8455:443"
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - text-network
+
+# Docker Networks
+networks:
+  text-network:
+    driver: bridge

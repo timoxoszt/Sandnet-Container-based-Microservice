@@ -1,0 +1,1 @@
+<h1>F1301 Store Text API</h1>

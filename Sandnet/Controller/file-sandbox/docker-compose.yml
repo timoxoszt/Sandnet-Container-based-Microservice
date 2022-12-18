@@ -1,0 +1,40 @@
+version: '3'
+services:
+  
+  # PHP Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: file-sandbox
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: api
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - file-network
+
+  # Nginx Service for Store file
+  webserver:
+    image: nginx:alpine
+    container_name: filesandbox-webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8092:80"
+      - "8454:443"
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - file-network
+
+# Docker Networks
+networks:
+  file-network:
+    driver: bridge
