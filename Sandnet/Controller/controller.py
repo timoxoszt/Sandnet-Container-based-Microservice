@@ -8,7 +8,8 @@ def eth_addr(packet):
 
 def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)
-    while True:
+    # while True:
+    if s != "":
         # receive a packet
         packet = s.recvfrom(65565)
         packet = packet[0]
@@ -61,5 +62,4 @@ def main():
             "TCP header length": tcph_length,
         }
         print(json.dumps(result))
-
 main()
