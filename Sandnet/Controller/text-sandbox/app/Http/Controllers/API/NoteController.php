@@ -15,8 +15,8 @@ class NoteController extends Controller
      */
     public function index()
     {
-        $notes = Note::all();
-        return response()->json($notes);
+        // $notes = Note::all();
+        // return response()->json($notes);
     }
 
     /**
@@ -46,10 +46,19 @@ class NoteController extends Controller
             'title' => $request->title,
             'body' => $request->body
         ]);
-      
-        $newNote->save();
-      
-        return response()->json($newNote);      
+        
+        // Virustotal scan
+        $apiKey = '30557d15b2e2f8cf46a81751b287b28c9e0570dc89edc6a061df09ef14ed92ad';
+        $domainScanner = new \Monaz\VirusTotal\Domain($apiKey);
+        $result = $domainScanner->getReport($request->body);
+
+        if($result['attributes']['last_analysis_stats']['harmless'] > 10 && $result['attributes']['last_analysis_stats']['malicious'] == 0){
+            $newNote->save();
+            return response()->json($newNote);   
+        }else{
+            return "{'title':'Warning', 'body':'Domain is unsafe'}";
+        };
+       
     }
 
     /**
